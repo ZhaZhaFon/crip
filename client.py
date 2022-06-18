@@ -7,6 +7,8 @@ from curses.ascii import CR
 import socket
 import time
 import os
+
+from sqlalchemy import null
 import util
 
 class ClientApplication(object):
@@ -16,7 +18,8 @@ class ClientApplication(object):
         self.client_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_ip = server_ip
         self.server_port = server_port
-        self.public_key, self.private_key = util.generate_asymetric_key
+        self.public_key, self.private_key = util.generate_asymetric_key()
+        self.server_pubkey = null
         print('')
     
     @staticmethod
@@ -119,6 +122,7 @@ class ClientApplication(object):
                     al_read_size += len(file_content)  # 计算总共读取的数据的大小
                     if file_content:  # 判断文件是否读取完了
                         print("  >> {}%".format(al_read_size / file_size))  # 输出读取文件的进度
+                        ct, ck, ms = util.encrypt_file(file_content)
                         self.client_server.sendall(file_content)  # 将读取的文件发送到服务端
                     else:
                         print("  >> 100%")  # 判断文件读取完了，输出读取的进度

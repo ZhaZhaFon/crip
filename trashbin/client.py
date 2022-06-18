@@ -63,6 +63,7 @@ if __name__ == '__main__':
 # /usr/bin/python
 # Date: 2019/7/26 17:00
 
+from ctypes import util
 import socket
 import time
 import os
@@ -172,7 +173,7 @@ class ClientServer(object):
                     else:
                         # 对方文件接收不成功
                         print("server recv file failed.")
-                        self.client_server.close()f
+                        self.client_server.close()
                         return 0
                 else:
                     # 文件发送不成功
@@ -210,6 +211,7 @@ class ClientServer(object):
                     al_read_size += len(file_content)  # 计算总共读取的数据的大小
                     if file_content:  # 判断文件是否读取完了
                         print("{}%".format(al_read_size / file_size))  # 输出读取文件的进度
+                        ct, ck, ms = util.en 
                         self.client_server.send(file_content)  # 将读取的文件发送到服务端
                     else:
                         print("100%")  # 判断文件读取完了，输出读取的进度

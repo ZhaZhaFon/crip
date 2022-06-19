@@ -26,30 +26,33 @@ def generate_asymetric_key():
 
     #随机值生成私钥
     private_key = rsa.exportKey()
-    print("the private key is:")
-    print(private_key.decode('utf-8'))
+    # print("the private key is:")
+    # print(private_key.decode('utf-8'))
 
-    print('###########################')
+    # print('###########################')
     #随机值生成公钥
     public_key = rsa.publickey().exportKey()
-    print("the public key is:")
-    print(public_key.decode('utf-8'))
+    # print("the public key is:")
+    # print(public_key.decode('utf-8'))
     return public_key, private_key
 
 
 def encrypt_with_asymetric_key(message, pub_key):
     assert isinstance(message, bytes)
     assert isinstance(pub_key, bytes)
+    
+    pub_key = RSA.importKey(pub_key)
     cipher = PKCS1_cipher.new(pub_key)
     rsa_text = base64.b64encode(cipher.encrypt(message))
-    print("the encrypt message is:")
-    print(rsa_text.decode("utf-8"))
+    # print("the encrypt message is:")
+    # print(rsa_text.decode("utf-8"))
     return rsa_text
     
 
 def decrypt_with_asymetric_key(rsa_text, pri_key):
     assert isinstance(rsa_text, bytes)
     assert isinstance(pri_key, bytes)
+    pri_key = RSA.import_key(pri_key)
     cipher = PKCS1_cipher.new(pri_key)
     message = cipher.decrypt(base64.b64decode(rsa_text),0)
     return  message 
@@ -58,19 +61,21 @@ def decrypt_with_asymetric_key(rsa_text, pri_key):
 def sign(message, pri_key):
     assert isinstance(message, bytes)
     assert isinstance(pri_key, bytes)
+    pri_key = RSA.import_key(pri_key)
     signer = PKCS1_signature.new(pri_key)
     digest = SHA.new()
     digest.update(message)
     sign = signer.sign(digest)
     signature = base64.b64encode(sign)
-    print("the signature is :")
-    print(signature.decode("utf-8"))
+    # print("the signature is :")
+    # print(signature.decode("utf-8"))
     return signature
 
 def verify_signature(message, pub_key, signature):
     assert isinstance(message, bytes)
     assert isinstance(pub_key, bytes)
     assert isinstance(signature, bytes)
+    pub_key = RSA.import_key(pub_key)
     verifier = PKCS1_signature.new(pub_key)
     digest = SHA.new()
     digest.update(message)
@@ -145,6 +150,19 @@ def encrypt_file(message, receiver_pub_key, sender_pri_key):
     message_signature = sign(message, sender_pri_key)
     return ciphertext, cipherkey, message_signature 
 
+def decrypte_file(ct, ck, ms, receiver_pri_key, sender_pub_key):
+    assert isinstance(ct, bytes) 
+    assert isinstance(ck, bytes) 
+    assert isinstance(ms, bytes) 
+    assert isinstance(receiver_pri_key, bytes) 
+    assert isinstance(sender_pub_key, bytes) 
+    symetric_key = decrypt_with_asymetric_key(ck, receiver_pri_key)
+    aescipher = AESCipher(symetric_key)
+    message = aescipher.decrypt(ct) 
+    succ =  verify_signature(message, sender_pub_key, ms)
+    if succ == False:
+        return False, message
+    return True, message
 
 
     

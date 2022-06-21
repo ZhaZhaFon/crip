@@ -4,23 +4,86 @@
 # Zifeng Zhao, June 17
 
 from curses.ascii import CR
+from http import server
 import socket
 import time
 import os
+import threading
+import concurrent.futures
 
-from sqlalchemy import null
 import util
 
+CA_IP = '127.0.0.1'
+CA_PORT = 62652
+SERVER_IP = '127.0.0.1'
 BUFSIZE = 1024
+POLL_BUFSIZE = 4096
+POLL_PORT = 62132
+
+def creat_folder(path):
+    if os.path.exists(path):
+        return
+    else:
+        os.mkdir(path)
 
 class ClientApplication(object):
 
-    def __init__(self, server_ip, server_port):
+    def __init__(self, server_ip, server_port, client_id):
         super(ClientApplication, self).__init__()
         self.server_ip = server_ip
         self.server_port = server_port
-        self.public_key, self.private_key = util.generate_asymetric_key()
+        client_pub_path = 'client_pub_key'
+        client_pri_path = 'client_pri_key'
+        if os.path.exists(client_pub_path):
+            print('read from key pair')
+            with open(client_pub_path, 'rb') as f:
+                self.public_key = f.read(POLL_BUFSIZE)
+            with open(client_pri_path, 'rb') as f:
+                self.private_key = f.read(POLL_BUFSIZE)
+        else:
+            print('generate key pair')
+            self.public_key, self.private_key = util.generate_asymetric_key()
+            with open(client_pub_path, 'wb') as f:
+                f.write(self.public_key)
+            with open(client_pri_path, 'wb') as f:
+                f.write(self.private_key)
+        self.client_id = client_id
+        self._lock = threading.Lock()
+        self.register()
         print('')
+    
+    def register(self):
+        print('register begin')
+        if os.path.exists(self.client_id + '.crt'):
+            print('exist a crt')
+            with open(self.client_id + '.crt', 'rb') as f:
+                self.crt = f.read(POLL_BUFSIZE)
+            with open('ca.crt', 'rb') as f:
+                self.ca_crt = f.read(POLL_BUFSIZE)
+        else:
+            with open('client.key', 'wb') as f:
+                f.write(self.private_key)
+            os.system('openssl req -new -key client.key -out ' + self.client_id + '.req')
+            with open(self.client_id + '.req', 'rb') as f:
+                req = f.read(POLL_BUFSIZE)
+            ca_connect = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            ca_connect.connect((CA_IP, int(CA_PORT)))
+            ca_connect.sendall(self.client_id.encode('utf-8'))
+            ca_connect.recv(POLL_BUFSIZE)
+            ca_connect.sendall(req)
+            self.crt = ca_connect.recv(POLL_BUFSIZE) 
+            with open(self.client_id + '.crt', 'wb') as f:
+                f.write(self.crt)
+            ca_connect.sendall('receive crt'.encode('utf-8'))
+            self.ca_crt = ca_connect.recv(POLL_BUFSIZE)
+            with open('ca.crt', 'wb') as f:
+                f.write(self.ca_crt)
+            ca_connect.close()
+            os.system('chmod 600 ca.crt')
+            os.system('chmod 600 ' + self.client_id + '.crt')
+            print('get crt issued and ca crt')
+        
+        
     
     # @staticmethod
     # def menu():
@@ -31,6 +94,8 @@ class ClientApplication(object):
     #     print("  3. 退出程序")
 
     def run_client(self):
+        t = threading.Thread(target=self.poll, daemon=True)
+        t.start()
         while True:
             # self.menu()
             # option = input("选择功能: ")
@@ -51,27 +116,51 @@ class ClientApplication(object):
             #     print("客户端退出")
             #     self.client_server.close()
             #     return
+
             file_name = input("press file path(q represent quit): ")
             if file_name == 'q':
                 break
-            self.send_to_server(file_name)
+            with self._lock:
+                self.send_to_server(file_name)
 
     def send_to_server(self, file_name):
         print("begin sending file")
         self.client_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_server.connect((self.server_ip, int(self.server_port)))
-        self.client_server.sendall(self.public_key)
-        receiver_pub_key = self.client_server.recv(BUFSIZE)
+        self.client_server.sendall('send file'.encode('utf-8'))
+        self.client_server.recv(BUFSIZE)
+        self.client_server.sendall(self.client_id.encode('utf-8'))
+        self.client_server.recv(BUFSIZE)
+        self.client_server.sendall(self.crt)
+        server_crt = self.client_server.recv(POLL_BUFSIZE)
+        with open('server.crt', 'wb') as f:
+            f.write(server_crt)
+        os.system('chmod 600 server.crt')
+        verify_succ, receiver_pub_key = util.verify_digital_signature('server.crt')
+        if verify_succ == False:
+            print("verify digital signtature error")
+            self.client_server.close()
+            return
         print("rece pub key size %d"%(len(receiver_pub_key)))
         print("send pub key size %d"%(len(self.public_key)))
-        print('send filename size %d'%(len(file_name.encode())))
-        self.client_server.sendall(file_name.encode())
+        print('send filename size %d'%(len(file_name.encode('utf-8'))))
+        self.client_server.sendall(file_name.encode('utf-8'))
         self.client_server.recv(BUFSIZE)
-        with open(file_name, 'rb') as f:
+        with open(file_name, 'rb') as f1:
             while True:
-                file_content = f.read(BUFSIZE)
+                file_content = f1.read(BUFSIZE)
                 if file_content :
                     ct, ck, ms = util.encrypt_file(file_content, receiver_pub_key, self.private_key)
+                    with open('ct.txt', 'wb') as f:
+                        f.write(ct)
+                    with open('ck.txt', 'wb') as f:
+                        f.write(ck)
+                    with open('ms.txt', 'wb') as f:
+                        f.write(ms)
+                    with open('send_rece_pub_key.txt', 'wb') as f:
+                        f.write(receiver_pub_key)
+                    with open('send_pri_key.txt', 'wb') as f:
+                        f.write(self.private_key)
                     self.client_server.sendall(ct)
                     self.client_server.recv(BUFSIZE)
                     self.client_server.sendall(ck)
@@ -82,6 +171,61 @@ class ClientApplication(object):
                     self.client_server.close()
                     print('finish sending file')
                     break
+    
+    def poll(self):
+        while True:
+            time.sleep(5)
+            with self._lock:
+
+                print('try to connect server')
+                self.poll_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self.poll_client.connect((SERVER_IP, int(self.server_port)))
+                self.poll_client.sendall('poll'.encode('utf-8'))
+                self.poll_client.recv(POLL_BUFSIZE)
+                print('connect to server success')
+                self.poll_client.sendall(self.crt)
+                # server_pub_key = self.poll_client.recv(POLL_BUFSIZE)
+                server_crt = self.poll_client.recv(POLL_BUFSIZE)
+                with open('server.crt', 'wb') as f:
+                    f.write(server_crt)
+                os.system('chmod 600 server.crt')
+                verify_succ, server_pub_key = util.verify_digital_signature('server.crt')
+                if verify_succ == False:
+                    print("verify digital signtature error")
+                    self.poll_client.close()
+                    return
+                # verify_succ = util.verify_digital_signature()
+                # if verify_succ == False:
+                #     print("verify digital signtature error")
+                #     self.client_server.close()
+                #     return
+                self.poll_client.sendall(self.client_id.encode('utf-8'))
+                while True:
+                    file_name = self.poll_client.recv(POLL_BUFSIZE).decode('utf-8')
+                    if len(file_name) == 0:
+                        break
+                    self.poll_client.sendall('receive file name'.encode('utf-8'))
+                    creat_folder(self.client_id)
+                    file_path = os.path.join(self.client_id, file_name)
+                    with open(file_path, 'wb') as f:
+                        while True:
+                            ct = self.poll_client.recv(POLL_BUFSIZE)
+                            mess = ct.decode('utf-8')
+                            self.poll_client.sendall('receive ct'.encode('utf-8'))
+                            if 'finish sending file' in mess:
+                                break
+                            ck = self.poll_client.recv(POLL_BUFSIZE)
+                            self.poll_client.sendall('receive ck'.encode('utf-8'))
+                            ms = self.poll_client.recv(POLL_BUFSIZE)
+                            self.poll_client.sendall('receive ms'.encode('utf-8'))
+                            succ, message = util.decrypte_file(ct, ck, ms, self.private_key, server_pub_key)
+                            if succ:
+                                f.write(message)
+                            else:
+                                print('file receive fail: since message verify fail')
+                                break            
+                self.poll_client.close()
+        
 
         # if os.path.exists(file_name) and (not os.path.isdir(file_name)) :
 
@@ -172,7 +316,10 @@ def main():
     # server_port = eval(input("  >> 进程端口号: "))
     server_address = '127.0.0.1'
     server_port = int(63231)
-    client = ClientApplication(server_address, server_port)
+    client_id = input("输入客户端名称")
+    creat_folder(client_id)
+    os.chdir(client_id)
+    client = ClientApplication(server_address, server_port, client_id)
     client.run_client()
 
 if __name__ == "__main__":

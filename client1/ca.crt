@@ -1,0 +1,19 @@
+          ad:28:9d:bd:75:30:ad:71:c7:9f:50:49:29:54:8b:
+                    7a:5d:73:ce:ff:a0:0c:30:4c:14:e1:a1:3e:da:bc:
+                    00:a1:cd:5a:9c:71:f3:66:49:05:0d:23:ba:7b:54:
+                    a2:13:a4:28:aa:59:80:ce:68:82:59:a1:56:a9:da:
+                    46:a5:b2:c0:6a:17:47:fb:5a:c1:ff:b0:ae:ef:c7:
+                    68:29:21:c3:ee:1a:2f:8a:25:46:50:4e:c2:2c:e6:
+                    58:55:8c:80:d2:eb:4d:56:bf:49:9c:22:63:d4:52:
+                    f9:e7:01:ed:36:6d:a4:83:93:2d:54:2f:7a:18:35:
+                    d3:8a:51:52:0c:7a:a0:c3:66:67:58:a7:a6:14:fc:
+                    a6:5e:d2:d5:5d:be:79:16:c3:a5:4c:13:01:14:9f:
+                    6f:1f
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                50:0C:00:98:D9:07:B8:98:D4:C1:66:F4:F8:7A:C9:DB:FF:87:39:05
+            X509v3 Authority Key Identifier: 
+                keyid:17:92:83:4A:34:55:C0:04:EA:

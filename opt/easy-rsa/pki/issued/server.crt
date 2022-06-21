@@ -1,0 +1,74 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            fb:8a:e5:f5:2f:9b:cb:e7:7b:32:d3:28:e0:68:93:c0
+        Signature Algorithm: ecdsa-with-SHA512
+        Issuer: CN=yxs
+        Validity
+            Not Before: Jun 21 21:56:39 2022 GMT
+            Not After : Sep 23 21:56:39 2024 GMT
+        Subject: C=CN, ST=GD, L=SZ, O=PKU, OU=SECE, CN=server/emailAddress=server@pku.edu.cn
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:c1:cc:a0:a2:a2:97:c7:8d:fe:02:7b:8c:ec:54:
+                    27:85:29:be:7d:f4:4d:d1:db:4c:23:9a:57:31:de:
+                    42:e9:ec:0b:3c:e6:5f:21:b9:be:14:ca:27:6d:3e:
+                    6c:36:e7:9c:aa:4f:b2:8e:ef:72:09:56:63:39:5c:
+                    4e:17:23:49:c8:70:73:13:4d:a7:25:e0:2f:93:c8:
+                    3b:b2:7a:30:63:b0:55:0d:fc:e0:ac:dc:00:06:43:
+                    12:48:c4:20:f4:c6:3d:9c:c5:d8:e4:f6:b9:cc:7d:
+                    c0:7c:10:28:8c:7d:b7:96:a3:d0:c9:d3:88:21:5e:
+                    81:d0:67:26:b1:30:aa:f0:10:c2:a1:a0:b1:89:05:
+                    08:f7:54:f1:d6:e8:46:40:25:c8:dd:9a:ab:be:37:
+                    ff:56:d0:bf:11:e4:be:f0:4c:e1:0d:2f:38:0b:38:
+                    74:e0:d4:4c:d4:dd:7a:fb:d2:2a:48:42:3d:3d:fb:
+                    8d:f4:27:42:cd:61:03:3a:98:75:c3:80:bb:a4:1c:
+                    5a:09:62:b9:6a:5a:eb:3b:88:a5:0f:6a:04:75:f5:
+                    9d:06:e4:77:0c:fe:5d:3b:45:a6:de:de:fa:82:b3:
+                    97:ab:62:10:ff:c4:ad:72:30:c4:6c:dd:40:d6:66:
+                    96:88:b9:a7:e9:a1:db:63:fa:da:8c:e8:22:2a:49:
+                    4e:7d
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Key Identifier: 
+                2C:FD:DD:85:35:CB:7F:09:04:30:82:A5:DE:9F:E7:FA:50:E6:D2:95
+            X509v3 Authority Key Identifier: 
+                keyid:17:92:83:4A:34:55:C0:04:EA:16:9E:7E:CA:61:0F:A3:1A:4A:22:9C
+                DirName:/CN=yxs
+                serial:D3:A8:8A:C4:A1:1E:7F:3B
+
+            X509v3 Extended Key Usage: 
+                TLS Web Client Authentication
+            X509v3 Key Usage: 
+                Digital Signature
+    Signature Algorithm: ecdsa-with-SHA512
+         30:65:02:31:00:e9:07:4a:4f:dc:1f:bc:93:58:3c:a6:29:82:
+         7c:a0:d1:80:63:cc:68:7c:13:ee:4f:6e:32:4e:b6:25:44:cd:
+         12:4f:75:4f:48:a4:ae:cd:a0:40:97:ce:cb:d3:36:9c:35:02:
+         30:79:77:80:4f:2b:9d:16:05:6a:41:1d:b9:18:b7:8b:50:11:
+         13:2c:c3:e0:b7:88:4c:1e:ac:2e:90:82:01:b2:a1:b9:a3:af:
+         95:26:40:98:1c:0c:82:73:ab:13:ea:34:79
+-----BEGIN CERTIFICATE-----
+MIIC/zCCAoWgAwIBAgIRAPuK5fUvm8vnezLTKOBok8AwCgYIKoZIzj0EAwQwDjEM
+MAoGA1UEAwwDeXhzMB4XDTIyMDYyMTIxNTYzOVoXDTI0MDkyMzIxNTYzOVowdzEL
+MAkGA1UEBhMCQ04xCzAJBgNVBAgMAkdEMQswCQYDVQQHDAJTWjEMMAoGA1UECgwD
+UEtVMQ0wCwYDVQQLDARTRUNFMQ8wDQYDVQQDDAZzZXJ2ZXIxIDAeBgkqhkiG9w0B
+CQEWEXNlcnZlckBwa3UuZWR1LmNuMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB
+CgKCAQEAwcygoqKXx43+AnuM7FQnhSm+ffRN0dtMI5pXMd5C6ewLPOZfIbm+FMon
+bT5sNuecqk+yju9yCVZjOVxOFyNJyHBzE02nJeAvk8g7snowY7BVDfzgrNwABkMS
+SMQg9MY9nMXY5Pa5zH3AfBAojH23lqPQydOIIV6B0GcmsTCq8BDCoaCxiQUI91Tx
+1uhGQCXI3Zqrvjf/VtC/EeS+8EzhDS84Czh04NRM1N16+9IqSEI9PfuN9CdCzWED
+Oph1w4C7pBxaCWK5alrrO4ilD2oEdfWdBuR3DP5dO0Wm3t76grOXq2IQ/8StcjDE
+bN1A1maWiLmn6aHbY/rajOgiKklOfQIDAQABo4GPMIGMMAkGA1UdEwQCMAAwHQYD
+VR0OBBYEFCz93YU1y38JBDCCpd6f5/pQ5tKVMD4GA1UdIwQ3MDWAFBeSg0o0VcAE
+6haefsphD6MaSiKcoRKkEDAOMQwwCgYDVQQDDAN5eHOCCQDTqIrEoR5/OzATBgNV
+HSUEDDAKBggrBgEFBQcDAjALBgNVHQ8EBAMCB4AwCgYIKoZIzj0EAwQDaAAwZQIx
+AOkHSk/cH7yTWDymKYJ8oNGAY8xofBPuT24yTrYlRM0ST3VPSKSuzaBAl87L0zac
+NQIweXeATyudFgVqQR25GLeLUBETLMPgt4hMHqwukIIBsqG5o6+VJkCYHAyCc6sT
+6jR5
+-----END CERTIFICATE-----

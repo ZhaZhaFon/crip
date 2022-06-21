@@ -1,0 +1,23 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            34:dd:98:ec:df:92:19:d7:09:ac:d8:6b:cc:b5:12:c4
+        Signature Algorithm: ecdsa-with-SHA512
+        Issuer: CN=yxs
+        Validity
+            Not Before: Jun 21 20:41:48 2022 GMT
+            Not After : Sep 23 20:41:48 2024 GMT
+        Subject: C=cn, ST=hu, L=wh, O=pku, OU=sece, CN=client1/emailAddress=123@qq.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:a4:b0:dd:de:7e:32:9e:e4:05:9b:dd:1c:51:3a:
+                    c9:4f:18:af:88:ae:bb:28:cc:39:cc:42:57:cd:6e:
+                    4e:31:be:6f:87:bc:4c:8a:94:62:71:26:36:ae:1d:
+                    b9:e8:9c:72:4e:66:88:27:29:5b:db:d5:3d:b2:c2:
+                    93:40:dd:b6:fd:a5:84:24:b0:51:8f:28:4e:d0:5b:
+                    19:81:2f:7c:3b:7e:4f:88:73:c9:ec:63:62:c8:57:
+                    98:1e:05:4e:07:67:34:b1:4b:db:4b:63:8a:61:37:
+          

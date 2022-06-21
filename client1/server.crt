@@ -1,0 +1,23 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            94:11:dc:47:fc:ff:46:69:24:4a:db:31:1d:b9:3e:de
+        Signature Algorithm: ecdsa-with-SHA512
+        Issuer: CN=yxs
+        Validity
+            Not Before: Jun 21 20:45:31 2022 GMT
+            Not After : Sep 23 20:45:31 2024 GMT
+        Subject: C=CN, ST=GD, L=SZ, O=yxs, CN=com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:e2:e2:a0:99:4c:22:cc:ff:21:62:4d:f9:aa:d4:
+                    ae:02:89:37:38:b9:69:bd:0f:ae:3a:20:40:a0:98:
+                    54:4b:83:4a:04:10:77:dd:a1:c5:10:e2:86:22:c9:
+                    1c:2f:84:ac:78:3f:c9:45:8e:fb:1e:ea:d7:c1:db:
+                    5d:a3:09:83:a4:38:fe:7f:6d:ee:01:81:b3:9a:bf:
+                    c1:56:43:58:02:60:45:20:86:da:3d:98:c9:e1:c5:
+                    cb:e4:ba:1a:70:36:14:c2:4c:c0:95:ce:6a:62:32:
+                    bb:63:63:9e:83:23:e8:f3:e2:

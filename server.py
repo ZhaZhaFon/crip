@@ -127,6 +127,11 @@ class ServerApplication(object):
         self.client_server.sendall('receive client id'.encode('utf-8'))
         sender_crt = self.client_server.recv(BUFSIZE)
         self.client_server.sendall(self.crt)
+
+        print("---------------------")
+        print('recv the the digital signature from clinet')
+        print(sender_crt)
+        print("---------------------")
         
         with open('client.crt', 'wb') as f:
             f.write(sender_crt)
@@ -139,12 +144,18 @@ class ServerApplication(object):
         # with open('../client5/client_pub_key', 'rb') as f:
         #     sender_pub_key = f.read(BUFSIZE)
 
+        print("---------------------")
+        print('verify success, the client pub key is')
+        print(sender_pub_key)
+        print("---------------------")
+
         print("Ready to recv the file from %s"%(recv_client_id))
         # 接收发送端发送的文件名及文件大小
         file_name = self.client_server.recv(BUFSIZE).decode('utf-8')
         self.client_server.sendall('receive file name'.encode('utf-8'))
         print('recv file name size is %d'%(len(file_name)))
         print('file name is %s'%(file_name))
+        print('recv the cipher')
         creat_folder(STORY_DIRECTORY_PATH)
         file_path = os.path.join(STORY_DIRECTORY_PATH, file_name)
         with open(file_path, "wb") as f1:
@@ -166,6 +177,12 @@ class ServerApplication(object):
                             if file_name not in self.wait_send_table[client_id]:
                                 self.wait_send_table[client_id].append(file_name)
                     break
+
+                print("---------------------")
+                print('get ciphertext from client, the cipher text is')
+                print(ct)
+                print("---------------------")
+                
                 self.client_server.sendall('receive ct'.encode('utf-8'))
                 ck = self.client_server.recv(BUFSIZE)
                 with open('ck.txt',  'wb') as f:
@@ -186,6 +203,12 @@ class ServerApplication(object):
                 with open('rece_sender_pub_key.txt', 'wb') as f:
                     f.write(sender_pub_key)
                 succ, message = util.decrypte_file(ct, ck, ms, self.pri_key, sender_pub_key)
+
+                print("---------------------")
+                print('decrypt success, the message is')
+                print(message)
+                print("---------------------")
+                
                 if succ:
                     f1.write(message)
                 else:

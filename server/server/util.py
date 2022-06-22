@@ -166,12 +166,12 @@ def decrypte_file(ct, ck, ms, receiver_pri_key, sender_pub_key):
     return True, message
 
 def verify_digital_signature(crt_name):
-    rc =  os.system('openssl verify -CAfile ca.crt %s'%crt_name) 
+    rc =  os.system('openssl verify -CAfile ca.crt %s > /dev/null'%crt_name) 
     if rc != 0:
         return False, None
 
     #证书提取公钥 
-    os.system('openssl x509 -in %s -pubkey -out opposit_pub.key'%crt_name) 
+    os.system('openssl x509 -in %s -pubkey -out opposit_pub.key > /dev/null'%crt_name) 
     with open('opposit_pub.key','rb') as f:
         pub_key = f.read(450)
     return True, pub_key

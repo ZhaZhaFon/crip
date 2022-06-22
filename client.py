@@ -133,20 +133,34 @@ class ClientApplication(object):
         self.client_server.recv(BUFSIZE)
         self.client_server.sendall(self.crt)
         server_crt = self.client_server.recv(POLL_BUFSIZE)
+        print("---------------------")
+        print("---------------------")
+        print('receive digital signature from server')
+        print(server_crt)
+        print("---------------------")
+        print("---------------------")
         with open('server.crt', 'wb') as f:
             f.write(server_crt)
         os.system('chmod 600 server.crt')
         verify_succ, receiver_pub_key = util.verify_digital_signature('server.crt')
+        print("---------------------")
+        print("---------------------")
+        print('verify digital signature success and get the pub key from client')
+        print("the server pub key is")
+        print(receiver_pub_key)
+        print("---------------------")
+        print("---------------------")
         if verify_succ == False:
             print("verify digital signtature error")
             self.client_server.close()
             return
-        print("rece pub key size %d"%(len(receiver_pub_key)))
-        print("send pub key size %d"%(len(self.public_key)))
-        print('send filename size %d'%(len(file_name.encode('utf-8'))))
+        # print("rece pub key size %d"%(len(receiver_pub_key)))
+        # print("send pub key size %d"%(len(self.public_key)))
+        # print('send filename size %d'%(len(file_name.encode('utf-8'))))
         self.client_server.sendall(file_name.encode('utf-8'))
         self.client_server.recv(BUFSIZE)
-        with open(file_name, 'rb') as f1:
+        file_path = os.path.join('storage', file_name)
+        with open(file_path, 'rb') as f1:
             while True:
                 file_content = f1.read(BUFSIZE)
                 if file_content :
@@ -162,6 +176,12 @@ class ClientApplication(object):
                     with open('send_pri_key.txt', 'wb') as f:
                         f.write(self.private_key)
                     self.client_server.sendall(ct)
+                    print("---------------------")
+                    print("---------------------")
+                    print("The ciphertext is:")
+                    print(ct)
+                    print("---------------------")
+                    print("---------------------")
                     self.client_server.recv(BUFSIZE)
                     self.client_server.sendall(ck)
                     self.client_server.recv(BUFSIZE)
@@ -177,12 +197,12 @@ class ClientApplication(object):
             time.sleep(5)
             with self._lock:
 
-                print('try to connect server')
+                # print('try to connect server')
                 self.poll_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.poll_client.connect((SERVER_IP, int(self.server_port)))
                 self.poll_client.sendall('poll'.encode('utf-8'))
                 self.poll_client.recv(POLL_BUFSIZE)
-                print('connect to server success')
+                # print('connect to server success')
                 self.poll_client.sendall(self.crt)
                 # server_pub_key = self.poll_client.recv(POLL_BUFSIZE)
                 server_crt = self.poll_client.recv(POLL_BUFSIZE)
@@ -205,8 +225,9 @@ class ClientApplication(object):
                     if len(file_name) == 0:
                         break
                     self.poll_client.sendall('receive file name'.encode('utf-8'))
-                    creat_folder(self.client_id)
-                    file_path = os.path.join(self.client_id, file_name)
+                    # creat_folder(self.client_id)
+                    file_path = os.path.join('storage', file_name)
+                    # file_path = file_name
                     with open(file_path, 'wb') as f:
                         while True:
                             ct = self.poll_client.recv(POLL_BUFSIZE)
@@ -224,6 +245,7 @@ class ClientApplication(object):
                             else:
                                 print('file receive fail: since message verify fail')
                                 break            
+                    print('receive file %s'%file_name)
                 self.poll_client.close()
         
 
